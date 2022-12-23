@@ -45,15 +45,16 @@ public final class PmdRulesDefinition implements RulesDefinition {
                     .load(
                             repository,
                             inputStream,
-                            StandardCharsets.UTF_8
-                    );
+                            StandardCharsets.UTF_8);
         } catch (IOException e) {
             LOGGER.error("Failed to load PMD RuleSet.", e);
         }
 
         ExternalDescriptionLoader.loadHtmlDescriptions(repository, htmlDescriptionFolder);
         loadNames(repository);
-        SqaleXmlLoader.load(repository, "/com/sonar/sqale/pmd-model.xml");
+        // SqaleXmlLoader.load(repository, "/com/sonar/sqale/pmd-model.xml");
+        RulesDefinitionXmlLoader ruleLoader = new RulesDefinitionXmlLoader();
+        ruleLoader.load(repository, PmdRulesDefinition.class.getResourceAsStream("/com/sonar/sqale/pmd-model.xml"), "UTF-8");
     }
 
     @Override
@@ -64,6 +65,8 @@ public final class PmdRulesDefinition implements RulesDefinition {
 
         extractRulesData(repository, "/org/sonar/plugins/pmd/rules.xml", "/org/sonar/l10n/pmd/rules/pmd");
 
+        // p3c
+        extractRulesData(repository, "/org/sonar/plugins/pmd/rules-p3c.xml", "/org/sonar/l10n/pmd/rules/pmd-p3c");
         repository.done();
     }
 
